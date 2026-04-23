@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GSC – Trial Application</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0eee9;color:#1a1a1a;font-size:15px;line-height:1.6}
+
+/* HERO */
+.hero{background:#0f3566;color:#fff;padding:48px 24px 40px;text-align:center}
+.logo-wrap{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:22px}
+.logo-svg{flex-shrink:0}
+.logo-text{text-align:left}
+.logo-text .t1{font-size:18px;font-weight:700;letter-spacing:1.5px;color:#fff;line-height:1.1}
+.logo-text .t2{font-size:10px;letter-spacing:2.5px;color:#c9a840;text-transform:uppercase}
+.hero h1{font-size:clamp(20px,3.5vw,30px);font-weight:600;line-height:1.3;margin-bottom:6px;color:#fff}
+.hero h1 em{color:#c9a840;font-style:normal}
+.hero-sub{font-size:12px;color:#7a9cc8;letter-spacing:0.5px;margin-bottom:10px}
+.hero-desc{max-width:500px;margin:12px auto 0;font-size:13px;color:#9ab4d0;line-height:1.75}
+
+/* TRUST BAR */
+.trust-bar{background:#0a2a50;border-top:1px solid #1a4070;border-bottom:1px solid #1a4070;padding:12px 24px;display:flex;justify-content:center;flex-wrap:wrap;gap:20px}
+.trust-item{display:flex;align-items:center;gap:8px;font-size:12px;color:#7a9cc8}
+.trust-star{color:#c9a840;font-size:14px;line-height:1}
+
+/* FORM AREA */
+.form-wrap{max-width:640px;margin:0 auto;padding:36px 20px 60px}
+
+/* PROGRESS */
+.progress-header{margin-bottom:26px}
+.step-labels{display:flex;justify-content:space-between;margin-bottom:8px}
+.step-label{font-size:11px;color:#9a9080;text-transform:uppercase;letter-spacing:0.8px}
+.step-label.active{color:#0f3566;font-weight:600}
+.progress-track{height:3px;background:#ddd8ce;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:#c9a840;border-radius:2px;transition:width 0.35s ease}
+
+/* SECTION CARD */
+.section-card{background:#fff;border:1px solid #ddd8ce;border-radius:6px;padding:28px 28px 22px}
+.section-title{font-size:17px;font-weight:600;color:#0f3566;margin-bottom:3px}
+.section-cn{font-size:12px;color:#9a9080;margin-bottom:20px}
+
+/* FIELDS */
+.field{margin-bottom:20px}
+.field label{display:block;font-size:13px;font-weight:600;color:#2a3a50;margin-bottom:6px}
+.field label .cn{font-weight:400;color:#9a9080;margin-left:4px}
+.req{color:#c04a2a;font-size:12px}
+.field input[type=text],
+.field input[type=email],
+.field textarea{width:100%;border:1px solid #d4cec4;border-radius:4px;padding:9px 12px;font-size:14px;font-family:inherit;color:#1a1a1a;background:#fdfcfa;outline:none;transition:border 0.2s}
+.field input:focus,.field textarea:focus{border-color:#0f3566}
+.field textarea{resize:vertical;min-height:80px}
+
+/* RADIO / CHECKBOX */
+.options-grid{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.opt-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid #ddd8ce;border-radius:4px;cursor:pointer;transition:border 0.15s,background 0.15s;background:#fdfcfa}
+.opt-row:hover{border-color:#0f3566;background:#f0f4fb}
+.opt-row input{accent-color:#0f3566;width:15px;height:15px;cursor:pointer}
+.opt-row span{font-size:13px;color:#2a3a50}
+.opt-row span .cn{color:#9a9080;font-size:12px;margin-left:4px}
+.opt-row.checked{border-color:#0f3566;background:#f0f4fb}
+
+/* COMMITMENT BOX */
+.commit-card{background:#f4f7fc;border:1px solid #c8d8ee;border-radius:4px;padding:14px 16px;font-size:13px;color:#2a3a50;line-height:1.7;margin-bottom:16px}
+.commit-card .cn-p{color:#7a9ab8;font-size:12px;margin-top:4px}
+
+/* SLOT GRID */
+.slot-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.slot-btn{border:1px solid #ddd8ce;border-radius:4px;padding:12px 10px;text-align:center;cursor:pointer;background:#fdfcfa;transition:border 0.15s,background 0.15s}
+.slot-btn:hover{border-color:#0f3566;background:#f0f4fb}
+.slot-btn.sel{border-color:#0f3566;background:#f0f4fb}
+.slot-btn .day{font-size:11px;font-weight:600;color:#0f3566;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.slot-btn .time{font-size:13px;color:#2a3a50}
+.slot-btn .time-cn{font-size:11px;color:#9a9080}
+
+/* NOTE BOX */
+.note-box{background:#fdf9ee;border:1px solid #e0cc88;border-radius:4px;padding:14px 16px;font-size:13px;color:#4a3a10;line-height:1.7;margin-top:12px}
+.note-box .cn{display:block;font-size:12px;color:#8a6e20;margin-top:4px}
+
+/* BUTTONS */
+.btn-row{display:flex;justify-content:space-between;align-items:center;margin-top:24px}
+.btn{padding:10px 24px;border-radius:4px;font-size:14px;font-family:inherit;cursor:pointer;transition:all 0.15s;border:none;font-weight:500}
+.btn-back{background:transparent;border:1px solid #c8c0b0;color:#5a5040}
+.btn-back:hover{background:#f0eee9}
+.btn-next{background:#0f3566;color:#fff}
+.btn-next:hover{background:#0a2a50}
+.btn-submit{background:#c9a840;color:#0a2040;border:none}
+.btn-submit:hover{background:#b89030}
+
+/* STEPS */
+.step{display:none}
+.step.active{display:block}
+
+/* SUCCESS */
+.success{text-align:center;padding:44px 24px}
+.success-icon{width:54px;height:54px;background:#f0f4fb;border:2px solid #0f3566;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:20px;color:#0f3566}
+.success h2{font-size:20px;font-weight:600;color:#0f3566;margin-bottom:6px}
+.success p{font-size:14px;color:#4a5a70;max-width:380px;margin:0 auto 6px}
+
+/* FOOTER */
+.footer{background:#0a2a50;color:#4a6a90;text-align:center;padding:18px;font-size:12px}
+.footer span{margin:0 8px;color:#2a4a6a}
+.footer strong{color:#7a9cc8}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="logo-wrap">
+    <svg class="logo-svg" width="54" height="54" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="95" r="70" stroke="#4a90d9" stroke-width="10" fill="none"/>
+      <line x1="100" y1="25" x2="100" y2="165" stroke="#4a90d9" stroke-width="7"/>
+      <line x1="30" y1="95" x2="170" y2="95" stroke="#4a90d9" stroke-width="7"/>
+      <ellipse cx="100" cy="95" rx="35" ry="70" stroke="#4a90d9" stroke-width="7" fill="none"/>
+      <circle cx="100" cy="68" r="12" fill="#4a90d9"/>
+      <path d="M100 80 L72 118 L100 105 L128 118 Z" fill="#4a90d9"/>
+      <path d="M60 148 Q100 132 140 148 Q130 162 100 165 Q70 162 60 148Z" fill="#4a90d9"/>
+      <polygon points="148,12 154,30 173,30 158,41 163,59 148,48 133,59 138,41 123,30 142,30" fill="#c9a840"/>
+    </svg>
+    <div class="logo-text">
+      <div class="t1">GLOBAL SUCCESS<br>CENTER</div>
+      <div class="t2">全球成功中心</div>
+    </div>
+  </div>
+  <h1>Academic Communication & Defense<br><em>Trial Application</em></h1>
+  <p class="hero-sub">学术沟通与辩护 · 试课申请</p>
+  <p class="hero-desc">This is not a booking — it's an evaluation. We review each application to ensure the trial session is tailored to your child's current level and goals.<br><span style="color:#7a9cc8;font-size:12px">我们审核每份申请，以确保试课针对孩子的实际水平与目标量身定制。</span></p>
+</div>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item"><span class="trust-star">★</span>TEDx Chiang Mai–trained instructor</div>
+  <div class="trust-item"><span class="trust-star">★</span>Grades 5 – 12 · International families</div>
+  <div class="trust-item"><span class="trust-star">★</span>Bilingual support EN · 中文</div>
+</div>
+
+<!-- FORM -->
+<div class="form-wrap">
+  <div class="progress-header">
+    <div class="step-labels">
+      <span class="step-label active" id="slbl-1">Parent info</span>
+      <span class="step-label" id="slbl-2">Student</span>
+      <span class="step-label" id="slbl-3">Readiness</span>
+      <span class="step-label" id="slbl-4">Commitment</span>
+      <span class="step-label" id="slbl-5">Schedule</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog" style="width:20%"></div></div>
+  </div>
+
+  <!-- S1 Parent -->
+  <div class="step active" id="s1">
+    <div class="section-card">
+      <div class="section-title">Parent Information</div>
+      <div class="section-cn">家长信息 — Section 1 of 5</div>
+      <div class="field"><label>Parent's Full Name <span class="cn">父母全名</span> <span class="req">*</span></label>
+        <input type="text" id="f-pname" placeholder="e.g. Wang Fang / 王芳"></div>
+      <div class="field"><label>Parent's Email <span class="cn">家长邮箱</span> <span class="req">*</span></label>
+        <input type="email" id="f-email" placeholder="yourname@example.com"></div>
+      <div class="field"><label>WeChat ID <span class="cn">微信号</span> <span class="req">*</span></label>
+        <input type="text" id="f-wechat" placeholder="Your WeChat username"></div>
+      <div class="field"><label>Phone Number <span class="cn">电话号码</span> <span class="req">*</span></label>
+        <input type="text" id="f-phone" placeholder="+66 or +86..."></div>
+      <div class="btn-row"><span></span><button class="btn btn-next" onclick="goTo(2)">Continue →</button></div>
+    </div>
+  </div>
+
+  <!-- S2 Student -->
+  <div class="step" id="s2">
+    <div class="section-card">
+      <div class="section-title">Student Profile</div>
+      <div class="section-cn">学生简介 — Section 2 of 5</div>
+      <div class="field"><label>Student's Full Name <span class="cn">学生全名</span> <span class="req">*</span></label>
+        <input type="text" id="f-sname" placeholder="As on school records"></div>
+      <div class="field"><label>Grade Level <span class="cn">年级</span> <span class="req">*</span></label>
+        <input type="text" id="f-grade" placeholder="e.g. Grade 7 / 七年级"></div>
+      <div class="field"><label>Current School <span class="cn">目前就读学校</span> <span class="req">*</span></label>
+        <input type="text" id="f-school" placeholder="School name"></div>
+      <div class="field"><label>Program / Curriculum <span class="cn">课程体系</span> <span class="req">*</span></label>
+        <div class="options-grid">
+          <label class="opt-row"><input type="radio" name="program" value="Thai"><span>Thai curriculum <span class="cn">泰国课程</span></span></label>
+          <label class="opt-row"><input type="radio" name="program" value="IP"><span>IP (International Programme) <span class="cn">国际项目</span></span></label>
+          <label class="opt-row"><input type="radio" name="program" value="International"><span>International <span class="cn">全国际课程</span></span></label>
+          <label class="opt-row"><input type="radio" name="program" value="Other"><span>Other <span class="cn">其他</span></span></label>
+        </div>
+      </div>
+      <div class="field"><label>Previous debate or public speaking experience? <span class="cn">是否有辩论/演讲经验？</span></label>
+        <div class="options-grid">
+          <label class="opt-row"><input type="radio" name="exp" value="Yes"><span>Yes — some experience <span class="cn">有经验</span></span></label>
+          <label class="opt-row"><input type="radio" name="exp" value="No"><span>No — starting fresh <span class="cn">从零开始</span></span></label>
+        </div>
+      </div>
+      <div class="btn-row"><button class="btn btn-back" onclick="goTo(1)">← Back</button><button class="btn btn-next" onclick="goTo(3)">Continue →</button></div>
+    </div>
+  </div>
+
+  <!-- S3 Readiness -->
+  <div class="step" id="s3">
+    <div class="section-card">
+      <div class="section-title">Intellectual Readiness</div>
+      <div class="section-cn">智力准备评估 — Section 3 of 5</div>
+      <div class="field"><label>What challenges does your child face when speaking or presenting? <span class="cn">孩子在表达时面临哪些挑战？</span></label>
+        <div class="options-grid">
+          <label class="opt-row"><input type="checkbox" value="Fear/Confidence"><span>Fear / Confidence <span class="cn">恐惧 · 自信</span></span></label>
+          <label class="opt-row"><input type="checkbox" value="Structure"><span>Structure <span class="cn">结构</span></span></label>
+          <label class="opt-row"><input type="checkbox" value="Vocabulary"><span>Vocabulary <span class="cn">词汇</span></span></label>
+          <label class="opt-row"><input type="checkbox" value="Critical Thinking"><span>Critical Thinking <span class="cn">批判性思维</span></span></label>
+          <label class="opt-row"><input type="checkbox" value="Other"><span>Other <span class="cn">其他</span></span></label>
+        </div>
+      </div>
+      <div class="field"><label>Where would you like your child to speak more confidently? <span class="cn">希望孩子在哪些场景更自信？</span></label>
+        <div class="options-grid">
+          <label class="opt-row"><input type="checkbox" value="Classroom"><span>Classroom <span class="cn">课堂</span></span></label>
+          <label class="opt-row"><input type="checkbox" value="Debate"><span>Debate <span class="cn">辩论</span></span></label>
+          <label class="opt-row"><input type="checkbox" value="Interviews"><span>Interviews <span class="cn">面试</span></span></label>
+          <label class="opt-row"><input type="checkbox" value="Leadership Roles"><span>Leadership Roles <span class="cn">领导角色</span></span></label>
+          <label class="opt-row"><input type="checkbox" value="University Preparation"><span>University Preparation <span class="cn">大学预科</span></span></label>
+        </div>
+      </div>
+      <div class="field"><label>Why is this program the right next step for your child? <span class="cn">为什么认为这个课程适合您的孩子？</span> <span class="req">*</span></label>
+        <textarea id="f-why" placeholder="Please share your thoughts in English or Chinese..."></textarea></div>
+      <div class="btn-row"><button class="btn btn-back" onclick="goTo(2)">← Back</button><button class="btn btn-next" onclick="goTo(4)">Continue →</button></div>
+    </div>
+  </div>
+
+  <!-- S4 Commitment -->
+  <div class="step" id="s4">
+    <div class="section-card">
+      <div class="section-title">Commitment Level</div>
+      <div class="section-cn">承诺水平 — Section 4 of 5</div>
+      <div class="commit-card">
+        <p>Academic Communication & Defense is a structured development program. Regular attendance is essential — sessions build on each other and inconsistency disrupts the group's progress.</p>
+        <p class="cn-p">学术沟通与辩护是一个系统性发展课程。定期出席是必要的——每节课程相互衔接，缺课会影响小组学习进度。</p>
+      </div>
+      <div class="field"><label>Are you prepared to commit to regular sessions if accepted? <span class="cn">如录取，您是否准备好定期参加课程？</span> <span class="req">*</span></label>
+        <div class="options-grid">
+          <label class="opt-row"><input type="radio" name="commit" value="Yes, we are ready to commit"><span>Yes, we are ready to commit <span class="cn">是的，我们准备好了</span></span></label>
+          <label class="opt-row"><input type="radio" name="commit" value="We would like more information first"><span>We would like more information first <span class="cn">我们希望先了解更多</span></span></label>
+        </div>
+      </div>
+      <div class="field"><label>Any additional information? <span class="cn">还有什么想告诉我们的？</span></label>
+        <textarea id="f-extra" placeholder="Optional / 可选"></textarea></div>
+      <div class="btn-row"><button class="btn btn-back" onclick="goTo(3)">← Back</button><button class="btn btn-next" onclick="goTo(5)">Continue →</button></div>
+    </div>
+  </div>
+
+  <!-- S5 Schedule -->
+  <div class="step" id="s5">
+    <div class="section-card">
+      <div class="section-title">Preferred Trial Time Slots</div>
+      <div class="section-cn">首选试课时间 — Section 5 of 5</div>
+      <div class="field"><label>Select your preferred time(s) <span class="cn">请选择您偏好的时间段</span></label>
+        <div class="slot-grid">
+          <div class="slot-btn" onclick="toggleSlot(this,'Thu-7pm')">
+            <div class="day">Thursday · 周四</div>
+            <div class="time">7:00 – 8:00 PM</div>
+            <div class="time-cn">下午 7 – 8 点</div>
+          </div>
+          <div class="slot-btn" onclick="toggleSlot(this,'Thu-8pm')">
+            <div class="day">Thursday · 周四</div>
+            <div class="time">8:00 – 9:00 PM</div>
+            <div class="time-cn">下午 8 – 9 点</div>
+          </div>
+          <div class="slot-btn" onclick="toggleSlot(this,'Fri-7pm')">
+            <div class="day">Friday · 周五</div>
+            <div class="time">7:00 – 8:00 PM</div>
+            <div class="time-cn">下午 7 – 8 点</div>
+          </div>
+          <div class="slot-btn" onclick="toggleSlot(this,'Fri-8pm')">
+            <div class="day">Friday · 周五</div>
+            <div class="time">8:00 – 9:00 PM</div>
+            <div class="time-cn">下午 8 – 9 点</div>
+          </div>
+        </div>
+      </div>
+      <div class="note-box">
+        <strong>Before your trial, please prepare a short introductory video</strong> of your child (1–2 min) so the teacher can see where they currently are before tailoring the session.
+        <span class="cn">试课前，请准备一段孩子的简短自我介绍视频（1–2分钟），以便老师了解孩子目前的水平并据此调整课程内容。</span>
+      </div>
+      <div class="btn-row"><button class="btn btn-back" onclick="goTo(4)">← Back</button><button class="btn btn-submit" onclick="submitForm()">Submit Application →</button></div>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="step" id="s6">
+    <div class="section-card">
+      <div class="success">
+        <div class="success-icon">✓</div>
+        <h2>Application Received</h2>
+        <p style="font-size:13px;color:#c9a840;margin-bottom:14px;font-weight:600">申请已收到</p>
+        <p>Thank you for applying. We will review your application and reach out via <strong>WeChat</strong> within 1–2 business days to confirm your trial slot.</p>
+        <p style="margin-top:8px;font-size:12px;color:#7a9080">感谢您的申请。我们将在1–2个工作日内通过微信与您联系确认试课时间。</p>
+        <div style="margin-top:26px;padding-top:18px;border-top:1px solid #e0d8ce;font-size:12px;color:#8a8070">
+          Questions? Contact via WeChat: <strong style="color:#0f3566">wongrat1216</strong> · LINE: <strong style="color:#0f3566">johnwong1216</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Global Success Center · Chiang Mai, Thailand
+  <span>·</span>
+  WeChat: <strong>wongrat1216</strong>
+  <span>·</span>
+  LINE: <strong>johnwong1216</strong>
+</div>
+
+<!-- HIDDEN GOOGLE FORM SUBMIT -->
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none"></iframe>
+<form id="gform" target="hidden_iframe" method="POST"
+  action="https://docs.google.com/forms/d/e/1FAIpQLSfTDxi1JjVx4FAbkFCzpPyT2KtTH3pE40QGShT-NaX2aH1GDQ/formResponse"
+  style="display:none">
+  <input name="entry.42050814"   id="gf-pname">
+  <input name="entry.110558552"  id="gf-email">
+  <input name="entry.753275788"  id="gf-wechat">
+  <input name="entry.959345195"  id="gf-phone">
+  <input name="entry.1860848159" id="gf-sname">
+  <input name="entry.1209055571" id="gf-grade">
+  <input name="entry.410601455"  id="gf-school">
+  <input name="entry.258766328"  id="gf-program">
+  <input name="entry.1010721653" id="gf-exp">
+  <input name="entry.46509618"   id="gf-why">
+  <input name="entry.423737810"  id="gf-commit">
+  <input name="entry.557807897"  id="gf-slots">
+  <input name="entry.1590492718" id="gf-extra">
+  <input name="entry.566936358"  id="gf-extra2">
+</form>
+
+<script>
+let cur=1;
+const slots=new Set();
+
+function goTo(n){
+  document.getElementById('s'+cur).classList.remove('active');
+  document.getElementById('s'+n).classList.add('active');
+  cur=n;
+  document.getElementById('prog').style.width=(n/5*100)+'%';
+  for(let i=1;i<=5;i++){
+    const el=document.getElementById('slbl-'+i);
+    if(el) el.className='step-label'+(i===n?' active':'');
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleSlot(el,key){
+  if(slots.has(key)){slots.delete(key);el.classList.remove('sel')}
+  else{slots.add(key);el.classList.add('sel')}
+}
+
+function getChecked(name){
+  return [...document.querySelectorAll(`[name="${name}"]:checked`)].map(r=>r.value).join(', ');
+}
+function getMultiChecked(container){
+  return [...document.querySelectorAll(`#${container} input[type=checkbox]:checked`)].map(r=>r.value).join(', ');
+}
+
+function submitForm(){
+  const form = document.getElementById('gform');
+
+  // Simple text fields
+  document.getElementById('gf-pname').value  = document.getElementById('f-pname').value;
+  document.getElementById('gf-email').value  = document.getElementById('f-email').value;
+  document.getElementById('gf-wechat').value = document.getElementById('f-wechat').value;
+  document.getElementById('gf-phone').value  = document.getElementById('f-phone').value;
+  document.getElementById('gf-sname').value  = document.getElementById('f-sname').value;
+  document.getElementById('gf-grade').value  = document.getElementById('f-grade').value;
+  document.getElementById('gf-school').value = document.getElementById('f-school').value;
+  document.getElementById('gf-program').value= getChecked('program');
+  document.getElementById('gf-exp').value    = getChecked('exp');
+  document.getElementById('gf-why').value    = document.getElementById('f-why').value;
+  document.getElementById('gf-commit').value = getChecked('commit');
+  document.getElementById('gf-extra').value  = document.getElementById('f-extra').value;
+  document.getElementById('gf-extra2').value = document.getElementById('f-extra').value;
+  document.getElementById('gf-slots').value  = [...slots].join(', ');
+
+  // Checkboxes: Google Forms needs one input per checked value with same name
+  form.querySelectorAll('.dyn-cb').forEach(el=>el.remove());
+  document.querySelectorAll('#s3 input[type=checkbox]:checked').forEach(cb=>{
+    const inp = document.createElement('input');
+    inp.type='hidden'; inp.className='dyn-cb';
+    inp.name = cb.closest('.options-grid') === document.querySelectorAll('#s3 .options-grid')[0]
+      ? 'entry.365416965' : 'entry.1841765400';
+    inp.value = cb.value;
+    form.appendChild(inp);
+  });
+
+  form.submit();
+  document.getElementById('s5').classList.remove('active');
+  document.getElementById('s6').classList.add('active');
+  document.getElementById('prog').style.width='100%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.querySelectorAll('.opt-row input').forEach(inp=>{
+  inp.addEventListener('change',function(){
+    if(this.type==='radio'){
+      document.querySelectorAll(`[name="${this.name}"]`).forEach(r=>r.closest('.opt-row').classList.remove('checked'));
+    }
+    if(this.checked) this.closest('.opt-row').classList.add('checked');
+    else this.closest('.opt-row').classList.remove('checked');
+  });
+});
+</script>
+</body>
+</html>
